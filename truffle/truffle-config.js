@@ -5,7 +5,7 @@
  * them to suit your project as necessary.
  *
  * More information about configuration can be found at:
- * 
+ *
  * https://trufflesuite.com/docs/truffle/reference/configuration
  *
  * To deploy via Infura you'll need a wallet provider (like @truffle/hdwallet-provider)
@@ -23,6 +23,8 @@
 // const infuraProjectId = process.env["INFURA_PROJECT_ID"];
 
 // const HDWalletProvider = require('@truffle/hdwallet-provider');
+const HDWalletProvider = require('@truffle/hdwallet-provider');
+require('dotenv').config();
 
 module.exports = {
   /**
@@ -77,6 +79,24 @@ module.exports = {
     //   network_id: 2111,   // This network is yours, in the cloud.
     //   production: true    // Treats this network as if it was a public net. (default: false)
     // }
+    development: {
+     host: "127.0.0.1",     // Localhost (default: none)
+     port: 7545,            // Standard Ethereum port (default: none)
+     network_id: "5777",       // Any network (default: none)
+    },
+    goerli: {
+      provider: function() {
+        return new HDWalletProvider({
+          mnemonic: {
+            phrase: `${process.env.MNEMONIC}`
+          },
+          providerOrUrl: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
+          addressIndex: 0
+        });
+      },
+      from: "0x55840eE140F60DA31D29De1f9e0Da8b46106A6fC",
+      network_id: 5
+    }
   },
 
   // Set default mocha options here, use special reporters, etc.
@@ -87,7 +107,7 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "0.8.14",      // Fetch exact version from solc-bin (default: truffle's version)
+      version: "0.8.13",      // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       // settings: {          // See the solidity docs for advice about optimization and evmVersion
       //  optimizer: {
