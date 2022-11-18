@@ -3,11 +3,12 @@ const actions = {
 };
 
 const initialState = {
-  artifact: null,
   web3: null,
   accounts: null,
   networkID: null,
-  contract: null
+
+  artifacts: {},
+  contracts: {}
 };
 
 const reducer = (state, action) => {

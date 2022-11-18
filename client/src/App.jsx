@@ -1,25 +1,25 @@
-import { EthProvider } from "./contexts/EthContext";
-import Intro from "./components/Intro/";
-import Setup from "./components/Setup";
-import Demo from "./components/Demo";
-import Footer from "./components/Footer";
 import "./App.css";
+import useContracts from "./hooks/useContracts";
+import useCurrentAccount from "./hooks/useCurrentAccount";
+import Voting from "./Voting";
 
 function App() {
+
+  const account = useCurrentAccount();
+  const contracts = useContracts();
+
+  if (!contracts.Voting) {
+    return <div>Contract Voting is not ready ?</div>
+  }
+
+  if (!account) {
+    return <div>not connected</div>
+  }
+
   return (
-    <EthProvider>
       <div id="App" >
-        <div className="container">
-          <Intro />
-          <hr />
-          <Setup />
-          <hr />
-          <Demo />
-          <hr />
-          <Footer />
-        </div>
+          <Voting votingContract={contracts.Voting} />
       </div>
-    </EthProvider>
   );
 }
 
