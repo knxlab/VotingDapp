@@ -4,11 +4,10 @@ export type EVENT_TYPE = {
     [key: string]: Array<any>
 }
 
-export default function useEthEventSubscriber({ contract, eventNames }: { contract: any; eventNames: Array<string>}) {
+export default function useEthEventSubscriber({ contract, eventNames, account }: { contract: any; eventNames: Array<string>; account: string;}) {
     const [events, setEvents] = useState<EVENT_TYPE>({});
 
     const onEvent = (event: any) => {
-        console.log("NEW EVENT !", event);
         setEvents(events => {
             return {
                 ...events,
@@ -19,6 +18,10 @@ export default function useEthEventSubscriber({ contract, eventNames }: { contra
             }
         })
     }
+
+    useEffect(() => {
+        setEvents({});
+    }, [account])
 
     useEffect(() => {
         // ProposalRegistered
@@ -34,7 +37,7 @@ export default function useEthEventSubscriber({ contract, eventNames }: { contra
                 contract.events[eventName]().off('data', onEvent);
             })
         }
-    }, [contract, eventNames]);
+    }, [contract, eventNames, account]);
 
     return events;
 }

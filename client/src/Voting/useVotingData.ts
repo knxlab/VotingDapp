@@ -19,15 +19,13 @@ export type VOTINGDATA = STATE & {
 
 export default function useVotingData({ votingContract }: any): VOTINGDATA {
 
-    console.log("--- votingContract", votingContract);
-
     const [loading, setLoading] = useState<boolean>(false);
     const [votingData, setVotingData] = useState<STATE>({
         ready: false,
         workflowStatus: -1
     });
-    const events = useEthEventSubscriber({ contract: votingContract, eventNames});
     const account = useCurrentAccount();
+    const events = useEthEventSubscriber({ contract: votingContract, eventNames, account});
 
     const refreshData = async () => {
 
@@ -58,6 +56,6 @@ export default function useVotingData({ votingContract }: any): VOTINGDATA {
         loading,
         refresh: refreshData,
         voters: (events['VoterRegistered'] || []).map(returnValues => returnValues.voterAddress as string),
-        proposalIds: (events['ProposalRegistered'] || []).map(returnValues => returnValues.proposalId as number)
+        proposalIds: (events['ProposalRegistered'] || []).map(returnValues => parseInt(returnValues.proposalId, 10) as number)
     };
 }

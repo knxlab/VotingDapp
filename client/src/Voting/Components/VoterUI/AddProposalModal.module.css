@@ -1,0 +1,12 @@
+
+.modalActions {
+    margin-top: 20px;
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.saveBtn {
+    margin-left: 10px !important;
+}

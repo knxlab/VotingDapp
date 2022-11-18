@@ -10,40 +10,57 @@ import { SpacingVertical } from "../Layout/Spacing";
 import VotingMetrics from "./Components/Metrics";
 import ProposalTable from "./Components/ProposalTable";
 import { WorkflowStatus } from "./Types/WorkflowStatus";
+import useVoter from "../hooks/useVoter";
+import { VotingContext } from "./VotingContext";
+
 
 
 export default function Voting({ votingContract }: any) {
 
     const account = useCurrentAccount();
     const votingData = useVotingData({ votingContract });
-    const { ready, owner, voters, workflowStatus } = votingData;
+    const { ready, workflowStatus } = votingData;
+    const {voter: currentUserVoter, refetch: refetchVoter} = useVoter({ address: account, votingContract });
 
     if (!ready) {
         return <div>Loadding...</div>
     }
 
-    const isVoter = votingData.voters.indexOf(account) !== -1;
-
+    console.log("votingContract", votingContract);
     return (
-        <div className={styles.container}>
-            <AppBar />
-            <Toolbar />
+        <VotingContext.Provider
+            value={{
+                votingData,
+                votingContract
+            }}
+        >
+            <div className={styles.container}>
+                <AppBar />
+                <Toolbar />
 
-            <Container className={styles.contentContainer} maxWidth="lg">
+                <Container className={styles.contentContainer} maxWidth="lg">
 
-                <WorkflowStatusStepper status={workflowStatus} />
+                    <WorkflowStatusStepper status={workflowStatus} />
 
-                <SpacingVertical />
+                    <SpacingVertical />
 
-                 <Grid container spacing={2}>
-                    <VotingMetrics votingData={votingData} />
-                    {workflowStatus >= WorkflowStatus.ProposalsRegistrationStarted && <ProposalTable votingData={votingData} />}
-                 </Grid>
+                    <Grid container spacing={2}>
+                        <VotingMetrics votingData={votingData} />
+                        {workflowStatus >= WorkflowStatus.ProposalsRegistrationStarted && (
+                            <ProposalTable
+                                votingContract={votingContract}
+                                votingData={votingData}
+                                currentUserVoter={currentUserVoter}
+                                refetchVoter={refetchVoter}
+                            />
+                        )}
+                    </Grid>
 
 
-            </Container>
+                </Container>
 
 
-        </div>
+            </div>
+        </VotingContext.Provider>
     )
 }

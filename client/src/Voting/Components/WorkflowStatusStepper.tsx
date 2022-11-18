@@ -6,7 +6,6 @@ import { WorkflowStatus } from '../Types/WorkflowStatus';
 import { enumKeys } from '../../helpers/enum';
 
 export default function WorkflowStatusStepper({ status = 0 }: { status? : WorkflowStatus }) {
-    console.log("Current status", status, typeof status);
     return (
         <Stepper activeStep={status}>
             {enumKeys(WorkflowStatus).map((WorkflowStatusKey, index) => {

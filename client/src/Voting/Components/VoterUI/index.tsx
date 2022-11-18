@@ -9,7 +9,6 @@ export default function VoterUI({ votingData }: { votingData: VOTINGDATA }) {
         <Grid container spacing={2}>
 
             <VotingMetrics votingData={votingData} />
-            <ProposalTable votingData={votingData} />
 
         </Grid>
     )
