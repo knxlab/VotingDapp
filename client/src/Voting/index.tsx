@@ -8,7 +8,7 @@ import AppBar from "./Components/AppBar";
 import { Container, Grid, Toolbar } from "@mui/material";
 import { SpacingVertical } from "../Layout/Spacing";
 import VotingMetrics from "./Components/Metrics";
-import ProposalTable from "./Components/ProposalTable";
+import Proposals from "./Components/Proposals";
 import { WorkflowStatus } from "./Types/WorkflowStatus";
 import useVoter from "../hooks/useVoter";
 import { VotingContext } from "./VotingContext";
@@ -47,7 +47,7 @@ export default function Voting({ votingContract }: any) {
                     <Grid container spacing={2}>
                         <VotingMetrics votingData={votingData} />
                         {workflowStatus >= WorkflowStatus.ProposalsRegistrationStarted && (
-                            <ProposalTable
+                            <Proposals
                                 votingContract={votingContract}
                                 votingData={votingData}
                                 currentUserVoter={currentUserVoter}

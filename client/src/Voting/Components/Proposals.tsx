@@ -86,7 +86,7 @@ export default function ProposalTable({
                     {votingData.proposalIds.length} Proposals
                 </Typography>
 
-                <Table>
+                {isVoter && <Table>
                     <TableHead>
                         <TableRow>
                             <TableCell>Proposal ID</TableCell>
@@ -128,7 +128,7 @@ export default function ProposalTable({
                             )
                         })}
                     </TableBody>
-                </Table>
+                </Table>}
             </Paper>
         </Grid>
     )
