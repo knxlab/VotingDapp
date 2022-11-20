@@ -5,6 +5,8 @@ import useContracts from "./hooks/useContracts";
 import useCurrentAccount from "./hooks/useCurrentAccount";
 import Voting from "./Voting";
 
+
+
 function App() {
 
   const { state: { loading }} = useEth();

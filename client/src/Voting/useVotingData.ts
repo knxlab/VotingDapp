@@ -42,8 +42,6 @@ export default function useVotingData({ votingContract }: any): VOTINGDATA {
         const workflowStatus: number = parseInt(await votingContract.methods.workflowStatus().call(), 10);
         const winningProposalID: number = parseInt(await votingContract.methods.winningProposalID().call(), 10);
 
-        console.log("@TODO -- Check winningProposalID is zero by default ?", winningProposalID);
-
         setVotingData(votingData => ({
             ...votingData,
             winningProposalID,
@@ -56,6 +54,7 @@ export default function useVotingData({ votingContract }: any): VOTINGDATA {
 
     useEffect(() => {
         refreshData();
+    // eslint-disable-next-line
     }, [votingContract, account]);
 
     return {

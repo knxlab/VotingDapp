@@ -12,7 +12,8 @@
   "devDependencies": {},
   "scripts": {
     "test": "truffle test",
-    "solc": "solc --help"
+    "solc": "solc --help",
+    "migrate-dev": "truffle migrate --network=development"
   },
   "author": "",
   "license": "MIT"

@@ -2,6 +2,7 @@ import { AppBar as MaterialAppBar, Chip, Toolbar, Typography } from '@mui/materi
 import React from 'react';
 import useCurrentAccount from '../../hooks/useCurrentAccount';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
+import DarkModeSwitch from '../../components/AppBar/DarkModeSwitch';
 
 function AccountChip({ address }: { address: string }) {
 
@@ -11,7 +12,7 @@ function AccountChip({ address }: { address: string }) {
             label={`${address.slice(0, 5)}...${address.slice(-4)}`}
             variant="outlined"
             clickable
-            style={{paddingLeft: '10px'}}
+            style={{paddingLeft: '10px', color: "white"}}
         />
     )
 }
@@ -38,7 +39,11 @@ export default function AppBar({ children }: { children?: React.ReactNode }) {
 
             {children}
 
-            <AccountChip address={account} />
+            <div>
+                <DarkModeSwitch />
+                <AccountChip address={account} />
+            </div>
+
 
             </Toolbar>
         </MaterialAppBar>

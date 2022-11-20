@@ -69,6 +69,7 @@ export default function ProposalTable({
 
     useEffect(() => {
         fetchProposals()
+    // eslint-disable-next-line
     }, [isVoter, votingData.proposalIds]);
 
     const canVote = () => {

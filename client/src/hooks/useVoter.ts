@@ -32,6 +32,7 @@ export default function useVoter({ address, votingContract }: { address: string;
 
     useEffect(() => {
         loadVoter();
+    // eslint-disable-next-line
     }, [address, votingContract, account]);
 
     return {voter, refetch: loadVoter};

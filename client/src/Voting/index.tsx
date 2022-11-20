@@ -42,7 +42,12 @@ export default function Voting({ votingContract }: any) {
                 <Container className={styles.contentContainer} maxWidth="lg">
 
                     <WorkflowStatusStepper status={workflowStatus} />
-                    <WorkflowActions onStatusChanged={refresh} />
+                    {account !== votingData?.owner && (
+                        <>
+                            <WorkflowActions onStatusChanged={refresh} />
+                        </>
+                    )}
+
                     <SpacingVertical />
 
                     {votingData.workflowStatus === WorkflowStatus.VotesTallied && (

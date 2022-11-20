@@ -6,7 +6,7 @@ import { Paper, TextField } from '@mui/material';
 import styles from './AddProposalModal.module.css';
 import useCurrentAccount from '../../../hooks/useCurrentAccount';
 import { useVotingContext } from '../../VotingContext';
-import { SnackbarProvider, VariantType, useSnackbar } from 'notistack';
+import { useSnackbar } from 'notistack';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -32,7 +32,7 @@ export default function AddProposalModal({
     const [proposalDesc, setProposalDesc] = React.useState("Eth 3.0");
     const [loading, setLoading] = React.useState(false);
     const account = useCurrentAccount();
-    const { votingContract, votingData } = useVotingContext();
+    const { votingContract } = useVotingContext();
     const { enqueueSnackbar } = useSnackbar();
 
     const onPressSave = async () => {
