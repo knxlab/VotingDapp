@@ -12,6 +12,7 @@ import Proposals from "./Components/Proposals";
 import { WorkflowStatus } from "./Types/WorkflowStatus";
 import useVoter from "../hooks/useVoter";
 import { VotingContext } from "./VotingContext";
+import WorkflowActions from "./Components/OwnerUI/WorkflowActions";
 
 
 
@@ -41,7 +42,7 @@ export default function Voting({ votingContract }: any) {
                 <Container className={styles.contentContainer} maxWidth="lg">
 
                     <WorkflowStatusStepper status={workflowStatus} />
-
+                    <WorkflowActions />
                     <SpacingVertical />
 
                     <Grid container spacing={2}>
