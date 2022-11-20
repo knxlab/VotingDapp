@@ -31,7 +31,7 @@ export default function VotingMetrics({ votingData }: { votingData: VOTINGDATA }
                 >
                     <Title>Votes</Title>
                     <Typography component="p" variant="h4">
-                        {votingData.proposalIds.length} Votes
+                        {votingData.votes.length} Votes
                     </Typography>
                 </Paper>
             </Grid>

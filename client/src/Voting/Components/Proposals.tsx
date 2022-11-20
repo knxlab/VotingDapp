@@ -1,5 +1,6 @@
 import { Button, Grid, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import extractError from '../../helpers/contractErrors';
 import useCurrentAccount from '../../hooks/useCurrentAccount';
 import { VOTER } from '../../hooks/useVoter';
 import Title from '../../Layout/Title';
@@ -51,9 +52,18 @@ export default function ProposalTable({
 
     const voteForProposal = async (proposalId: number) => {
         setIsVotingForProposalId(proposalId);
-        const vote = await votingContract.methods.setVote(proposalId).call({ from: account });
-        await fetchProposals();
-        await refetchVoter();
+        try {
+            await votingContract.methods.setVote(proposalId).call({ from: account });
+            const vote = await votingContract.methods.setVote(proposalId).send({ from: account });
+            console.log("vote", vote);
+            await fetchProposals();
+            await refetchVoter();
+        } catch(e: any) {
+            const contractError = extractError(e);
+            if (contractError) {
+                alert(contractError.message);
+            }
+        }
         setIsVotingForProposalId(0);
     }
 

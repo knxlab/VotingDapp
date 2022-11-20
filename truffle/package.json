@@ -6,11 +6,13 @@
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.0",
     "@truffle/hdwallet-provider": "^2.0.10",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "solc": "^0.8.17"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "truffle test"
+    "test": "truffle test",
+    "solc": "solc --help"
   },
   "author": "",
   "license": "MIT"

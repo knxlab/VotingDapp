@@ -3,6 +3,7 @@ const actions = {
 };
 
 const initialState = {
+  loading: true,
   web3: null,
   accounts: null,
   networkID: null,

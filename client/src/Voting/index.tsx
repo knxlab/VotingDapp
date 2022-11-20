@@ -13,6 +13,7 @@ import { WorkflowStatus } from "./Types/WorkflowStatus";
 import useVoter from "../hooks/useVoter";
 import { VotingContext } from "./VotingContext";
 import WorkflowActions from "./Components/OwnerUI/WorkflowActions";
+import WinningProposal from "./Components/WinningProposal";
 
 
 
@@ -20,14 +21,13 @@ export default function Voting({ votingContract }: any) {
 
     const account = useCurrentAccount();
     const votingData = useVotingData({ votingContract });
-    const { ready, workflowStatus } = votingData;
+    const { ready, workflowStatus, refresh } = votingData;
     const {voter: currentUserVoter, refetch: refetchVoter} = useVoter({ address: account, votingContract });
 
     if (!ready) {
         return <div>Loadding...</div>
     }
 
-    console.log("votingContract", votingContract);
     return (
         <VotingContext.Provider
             value={{
@@ -42,8 +42,15 @@ export default function Voting({ votingContract }: any) {
                 <Container className={styles.contentContainer} maxWidth="lg">
 
                     <WorkflowStatusStepper status={workflowStatus} />
-                    <WorkflowActions />
+                    <WorkflowActions onStatusChanged={refresh} />
                     <SpacingVertical />
+
+                    {votingData.workflowStatus === WorkflowStatus.VotesTallied && (
+                        <>
+                            <WinningProposal />
+                            <SpacingVertical />
+                        </>
+                    )}
 
                     <Grid container spacing={2}>
                         <VotingMetrics votingData={votingData} />

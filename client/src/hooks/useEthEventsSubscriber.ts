@@ -24,9 +24,7 @@ export default function useEthEventSubscriber({ contract, eventNames, account }:
     }, [account])
 
     useEffect(() => {
-        // ProposalRegistered
-        console.log("ADD EVENTS", eventNames, contract.events);
-
+        // console.log("ADD EVENTS", eventNames, contract.events);
         eventNames.forEach((eventName) => {
             contract.events[eventName]({ fromBlock: 0 }).on('data', onEvent);
         })
