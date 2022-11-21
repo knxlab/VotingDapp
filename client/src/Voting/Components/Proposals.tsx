@@ -118,7 +118,7 @@ export default function ProposalTable({
                                 <TableCell></TableCell>
                             </TableRow>
                         )}
-                        {!isLoading && proposals.map(({proposalId, proposalDesc, voteCount}) => {
+                        {!isLoading && [...proposals].sort((a, b) => (a.voteCount > b.voteCount ? -1 : 1)).map(({proposalId, proposalDesc, voteCount}) => {
                             return (
                                 <TableRow key={proposalId}>
                                     <TableCell>{proposalId}</TableCell>
