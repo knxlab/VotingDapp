@@ -8,6 +8,7 @@ export default function useEthEventSubscriber({ contract, eventNames, account }:
     const [events, setEvents] = useState<EVENT_TYPE>({});
 
     const onEvent = (event: any) => {
+        console.log("ON EVENT", event?.event, event?.returnValues);
         setEvents(events => {
             return {
                 ...events,
@@ -24,15 +25,19 @@ export default function useEthEventSubscriber({ contract, eventNames, account }:
     }, [account])
 
     useEffect(() => {
-        // console.log("ADD EVENTS", eventNames, contract.events);
+
+        const eventEmitters: Array<any> = [];
         eventNames.forEach((eventName) => {
-            contract.events[eventName]({ fromBlock: 0 }).on('data', onEvent);
+            eventEmitters.push(contract.events[eventName]({ fromBlock: 0 }));
+        })
+
+        eventEmitters.forEach((eventEmitter) => {
+            eventEmitter.on('data', onEvent);
         })
 
         return () => {
-            console.log("REMOVE EVENTS");
-            eventNames.forEach((eventName) => {
-                contract.events[eventName]().off('data', onEvent);
+            eventEmitters.forEach((eventEmitter) => {
+                eventEmitter.off('data', onEvent);
             })
         }
     }, [contract, eventNames, account]);

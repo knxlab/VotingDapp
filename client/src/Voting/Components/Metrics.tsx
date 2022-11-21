@@ -1,9 +1,15 @@
-import { Grid, Paper, Typography } from '@mui/material';
-import React from 'react';
+import { Button, Grid, Paper, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { RowSpaceBetween } from '../../Layout/RowSpaceBetween';
 import Title from '../../Layout/Title';
+import { WorkflowStatus } from '../Types/WorkflowStatus';
 import { VOTINGDATA } from '../useVotingData';
+import ModalVotersTable from './OwnerUI/VotersTable/ModalTable';
 
 export default function VotingMetrics({ votingData }: { votingData: VOTINGDATA }) {
+
+    const [modalVotersOpen, setModalVotersOpen] = useState<boolean>(false);
+    const { isOwner, workflowStatus } = votingData;
     return (
         <>
             <Grid item xs={6}>
@@ -14,7 +20,16 @@ export default function VotingMetrics({ votingData }: { votingData: VOTINGDATA }
                         flexDirection: 'column',
                     }}
                 >
-                    <Title>Voters</Title>
+                    <RowSpaceBetween>
+                        <Title>Voters</Title>
+                        {isOwner && workflowStatus !== WorkflowStatus.RegisteringVoters && (
+                            <>
+                                <Button variant="outlined" onClick={() => setModalVotersOpen(true)}>See voters</Button>
+                                {modalVotersOpen && <ModalVotersTable open={modalVotersOpen} handleClose={() => setModalVotersOpen(false)}/>}
+                            </>
+                        )}
+                    </RowSpaceBetween>
+
                     <Typography component="p" variant="h4">
                         {votingData.voters.length} Voters
                     </Typography>

@@ -12,7 +12,7 @@ const DefaultVoter: VOTER = {
     hasVoted: false,
     votedProposalId: 0
 };
-export default function useVoter({ address, votingContract }: { address: string; votingContract: any }): { voter: VOTER, refetch: () => Promise<any>} {
+export default function useVoter({ address, votingContract }: { address: string; votingContract: any }): { voter: VOTER, isVoter: boolean; refetch: () => Promise<any>} {
     const [voter, setVoter] = useState<VOTER>(DefaultVoter);
 
     const account = useCurrentAccount();
@@ -26,6 +26,7 @@ export default function useVoter({ address, votingContract }: { address: string;
                 votedProposalId: parseInt(voter.votedProposalId, 10)
             })
         } catch (e) {
+            console.log("Normal error due to getVoter try")
             setVoter(DefaultVoter)
         }
     }
@@ -35,5 +36,5 @@ export default function useVoter({ address, votingContract }: { address: string;
     // eslint-disable-next-line
     }, [address, votingContract, account]);
 
-    return {voter, refetch: loadVoter};
+    return {voter, isVoter: voter.isRegistered, refetch: loadVoter};
 }

@@ -14,11 +14,11 @@ export default function AddProposalAction({
     return (
         <>
             <Button variant="outlined" onClick={() => setModalOpen(true)}>Add new proposal</Button>
-            <AddProposalModal
+            {modalOpen && <AddProposalModal
                 open={modalOpen}
                 handleClose={() => setModalOpen(false)}
                 onProposalSaved={onProposalSaved}
-            />
+            />}
         </>
     )
 }

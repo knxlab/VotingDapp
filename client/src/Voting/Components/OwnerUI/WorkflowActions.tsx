@@ -38,6 +38,7 @@ export default function WorkflowActions({
             if (errorContract) {
                 alert(errorContract.message);
             }
+            setLoading(false);
         }
     }
 

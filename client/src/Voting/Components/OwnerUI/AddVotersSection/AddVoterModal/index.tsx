@@ -1,12 +1,13 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
-import Title from '../../../Layout/Title';
 import { Paper, TextField } from '@mui/material';
-import styles from './AddProposalModal.module.css';
-import useCurrentAccount from '../../../hooks/useCurrentAccount';
-import { useVotingContext } from '../../VotingContext';
+import styles from './index.module.css';
 import { useSnackbar } from 'notistack';
+import useCurrentAccount from '../../../../../hooks/useCurrentAccount';
+import { useVotingContext } from '../../../../VotingContext';
+import Title from '../../../../../Layout/Title';
+import Web3 from 'web3';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -19,17 +20,17 @@ const style = {
   p: 4,
 };
 
-export default function AddProposalModal({
+export default function AddVoterModal({
     open = false,
     handleClose = () => {},
-    onProposalSaved = async () => null
+    onVoterSaved = async () => null
 }: {
     open: boolean;
     handleClose: () => any;
-    onProposalSaved?: () => Promise<any>;
+    onVoterSaved?: (voterAddress: string) => Promise<any>;
 }) {
 
-    const [proposalDesc, setProposalDesc] = React.useState("");
+    const [voterAddress, setVoterAddress] = React.useState("");
     const [loading, setLoading] = React.useState(false);
     const account = useCurrentAccount();
     const { votingContract } = useVotingContext();
@@ -38,17 +39,18 @@ export default function AddProposalModal({
     const onPressSave = async () => {
         try {
             setLoading(true);
-            console.log("votingContract.methods", votingContract.methods.addProposal, account);
-            await votingContract.methods.addProposal(proposalDesc).call({ from: account });
-            await votingContract.methods.addProposal(proposalDesc).send({ from: account });
-            await onProposalSaved();
+            // await votingContract.methods.addVoter(voterAddress).call({ from: account });
+            await votingContract.methods.addVoter(voterAddress).send({ from: account });
+            await onVoterSaved(voterAddress);
             setLoading(false);
-            enqueueSnackbar("Proposal added !", { variant: "success" });
             handleClose();
+            enqueueSnackbar("Voter added !", { variant: "success" });
         } catch (e) {
             setLoading(false);
         }
     }
+
+    const canSave = Web3.utils.isAddress(voterAddress);
 
     return (
         <Modal
@@ -59,12 +61,12 @@ export default function AddProposalModal({
         >
             <Paper sx={style}>
                 <Title>
-                    Add a new Proposal
+                    Add a new voter
                 </Title>
-                <TextField placeholder='Write your proposal' fullWidth variant="outlined" disabled={loading} value={proposalDesc} onChange={e => setProposalDesc(e.target.value)} />
+                <TextField placeholder='Address of the voter' fullWidth variant="outlined" disabled={loading} value={voterAddress} onChange={e => setVoterAddress(e.target.value)} />
                 <div className={styles.modalActions}>
                     {!loading && <Button variant='outlined' color='secondary' onClick={handleClose}>Cancel</Button>}
-                    <Button variant='contained' color='primary' disabled={loading || proposalDesc.trim() === ""} className={styles.saveBtn} onClick={onPressSave}>Save</Button>
+                    <Button variant='contained' color='primary' disabled={!canSave || loading || voterAddress.trim() === ""} className={styles.saveBtn} onClick={onPressSave}>Save</Button>
                 </div>
             </Paper>
         </Modal>
