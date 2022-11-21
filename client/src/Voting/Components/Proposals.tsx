@@ -54,8 +54,7 @@ export default function ProposalTable({
         setIsVotingForProposalId(proposalId);
         try {
             await votingContract.methods.setVote(proposalId).call({ from: account });
-            const vote = await votingContract.methods.setVote(proposalId).send({ from: account });
-            console.log("vote", vote);
+            await votingContract.methods.setVote(proposalId).send({ from: account });
             await fetchProposals();
             await refetchVoter();
         } catch(e: any) {

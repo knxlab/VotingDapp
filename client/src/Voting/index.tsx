@@ -5,7 +5,7 @@ import styles from './styles.module.css'
 import WorkflowStatusStepper from "./Components/WorkflowStatusStepper";
 import React from "react";
 import AppBar from "./Components/AppBar";
-import { Container, Grid, Paper, Toolbar, Typography } from "@mui/material";
+import { Container, Grid, Toolbar } from "@mui/material";
 import { SpacingVertical } from "../Layout/Spacing";
 import VotingMetrics from "./Components/Metrics";
 import Proposals from "./Components/Proposals";

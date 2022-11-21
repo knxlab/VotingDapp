@@ -23,7 +23,6 @@ export default function WinningProposal({
                 description: proposal.description,
                 voteCount: proposal.voteCount
             })
-            console.log("proposal", proposal);
         })()
     }, [isVoter, account, votingContract, winningProposalID])
 

@@ -8,7 +8,6 @@ export default function useEthEventSubscriber({ contract, eventNames, account }:
     const [events, setEvents] = useState<EVENT_TYPE>({});
 
     const onEvent = (event: any) => {
-        console.log("ON EVENT", event?.event, event?.returnValues);
         setEvents(events => {
             return {
                 ...events,

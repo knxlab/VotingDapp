@@ -38,7 +38,6 @@ export default function AddProposalModal({
     const onPressSave = async () => {
         try {
             setLoading(true);
-            console.log("votingContract.methods", votingContract.methods.addProposal, account);
             await votingContract.methods.addProposal(proposalDesc).call({ from: account });
             await votingContract.methods.addProposal(proposalDesc).send({ from: account });
             await onProposalSaved();
