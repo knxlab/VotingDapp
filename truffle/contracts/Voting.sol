@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity 0.8.13;
+// import 'https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol';
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 
@@ -11,6 +12,8 @@ contract Voting is Ownable {
     struct Voter {
         bool isRegistered;
         bool hasVoted;
+        uint proposalRegisteredCount; // limit to 3
+        // Si un voter peut ajouter autant de proposition qu'il veut, il peut alors faire grossir le tableau au point de ne plus pouvoir appeller la function "tallyvotes"
         uint votedProposalId;
     }
 
@@ -73,10 +76,12 @@ contract Voting is Ownable {
         require(workflowStatus == WorkflowStatus.ProposalsRegistrationStarted, 'Proposals are not allowed yet');
         require(keccak256(abi.encode(_desc)) != keccak256(abi.encode("")), 'Vous ne pouvez pas ne rien proposer'); // facultatif
         // voir que desc est different des autres
+        require(voters[msg.sender].proposalRegisteredCount < 3, 'Vous ne pouvez pas faire + de 3 propositions');
 
         Proposal memory proposal;
         proposal.description = _desc;
         proposalsArray.push(proposal);
+        voters[msg.sender].proposalRegisteredCount++;
         emit ProposalRegistered(proposalsArray.length-1);
     }
 

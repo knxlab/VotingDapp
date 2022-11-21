@@ -22,7 +22,7 @@ export default function VotingMetrics({ votingData }: { votingData: VOTINGDATA }
                 >
                     <RowSpaceBetween>
                         <Title>Voters</Title>
-                        {isOwner && workflowStatus !== WorkflowStatus.RegisteringVoters && (
+                        {workflowStatus !== WorkflowStatus.RegisteringVoters && (
                             <>
                                 <Button variant="outlined" onClick={() => setModalVotersOpen(true)}>See voters</Button>
                                 {modalVotersOpen && <ModalVotersTable open={modalVotersOpen} handleClose={() => setModalVotersOpen(false)}/>}
