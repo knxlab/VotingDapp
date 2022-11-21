@@ -3,9 +3,9 @@ import useCurrentAccount from "../hooks/useCurrentAccount";
 import useVotingData from "./useVotingData";
 import styles from './styles.module.css'
 import WorkflowStatusStepper from "./Components/WorkflowStatusStepper";
-import React from "react";
-import AppBar from "./Components/AppBar";
-import { Container, Grid, Toolbar } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import AppBar from "../components/AppBar";
+import { Box, Container, Grid, Toolbar } from "@mui/material";
 import { SpacingVertical } from "../Layout/Spacing";
 import VotingMetrics from "./Components/Metrics";
 import Proposals from "./Components/Proposals";
@@ -15,11 +15,36 @@ import { VotingContext } from "./VotingContext";
 import WorkflowActions from "./Components/OwnerUI/WorkflowActions";
 import WinningProposal from "./Components/WinningProposal";
 import AddVotersSection from "./Components/OwnerUI/AddVotersSection";
+import VotingSession from "../Types/VotingSession";
+import VotingArtifact from '../contracts/Voting.json';
+import { useEth } from "../contexts/EthContext";
 
+export function VotingWithAddress({ votingSessionAdress }: { votingSessionAdress: string }) {
+    const [contract, setContract] = useState();
+    const { state: { web3 }} = useEth();
 
+    useEffect(() => {
+        if (web3) {
+            setContract(new web3.eth.Contract(VotingArtifact.abi, votingSessionAdress));
+        }
+    }, [votingSessionAdress, web3]);
 
-export default function Voting({ votingContract }: any) {
+    if (!contract) {
+        return <div>loading...</div>
+    }
 
+    return (
+        <Voting votingSession={{
+            description: "???",
+            contract,
+            contractAdress: votingSessionAdress
+        }} />
+    );
+}
+
+export default function Voting({ votingSession }: { votingSession: VotingSession }) {
+
+    const { contract: votingContract } = votingSession || {};
     const account = useCurrentAccount();
     const votingData = useVotingData({ votingContract });
     const { ready, isOwner, workflowStatus, refresh } = votingData;
@@ -36,8 +61,17 @@ export default function Voting({ votingContract }: any) {
                 votingContract
             }}
         >
-            <div className={styles.container}>
-                <AppBar />
+            <Box component="main"
+                sx={{
+                    flexGrow: 1,
+                    height: '100vh',
+                    overflow: 'auto',
+                    position: 'relative',
+                }}
+            >
+                <AppBar>
+                    {votingData.description || ""}
+                </AppBar>
                 <Toolbar />
 
                 <Container className={styles.contentContainer} maxWidth="lg">
@@ -77,7 +111,7 @@ export default function Voting({ votingContract }: any) {
                 </Container>
 
 
-            </div>
+            </Box>
         </VotingContext.Provider>
     )
 }

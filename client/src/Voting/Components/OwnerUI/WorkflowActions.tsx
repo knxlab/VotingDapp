@@ -23,10 +23,7 @@ export default function WorkflowActions({
         return null;
     }
 
-    const goToStatus = async (methodName: string, confirmMessage: string) => {
-        if (!window.confirm(`Are you sure you want to ${confirmMessage} ?`)) {
-            return;
-        }
+    const goToStatus = async (methodName: string) => {
         try {
             setLoading(true);
             await votingContract.methods[methodName]().call({ from: account });
@@ -47,23 +44,23 @@ export default function WorkflowActions({
     switch(workflowStatus) {
         case WorkflowStatus.RegisteringVoters:
             label = "Start registration proposal";
-            buttonProps = {label, onClick: () => goToStatus('startProposalsRegistering', label)};
+            buttonProps = {label, onClick: () => goToStatus('startProposalsRegistering')};
             break;
         case WorkflowStatus.ProposalsRegistrationStarted:
             label = "End registration proposal";
-            buttonProps = {label, onClick: () => goToStatus('endProposalsRegistering', label)};
+            buttonProps = {label, onClick: () => goToStatus('endProposalsRegistering')};
             break;
         case WorkflowStatus.ProposalsRegistrationEnded:
             label = "Start Voting Session";
-            buttonProps = {label, onClick: () => goToStatus('startVotingSession', label)};
+            buttonProps = {label, onClick: () => goToStatus('startVotingSession')};
             break;
         case WorkflowStatus.VotingSessionStarted:
             label = "End Voting Session";
-            buttonProps = {label, onClick: () => goToStatus('endVotingSession', label)};
+            buttonProps = {label, onClick: () => goToStatus('endVotingSession')};
             break;
         case WorkflowStatus.VotingSessionEnded:
             label = "Tally Votes"
-            buttonProps = {label, onClick: () => goToStatus('tallyVotes', label)};
+            buttonProps = {label, onClick: () => goToStatus('tallyVotes')};
             break;
         default:
             break;

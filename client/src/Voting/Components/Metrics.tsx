@@ -9,7 +9,7 @@ import ModalVotersTable from './OwnerUI/VotersTable/ModalTable';
 export default function VotingMetrics({ votingData }: { votingData: VOTINGDATA }) {
 
     const [modalVotersOpen, setModalVotersOpen] = useState<boolean>(false);
-    const { isOwner, workflowStatus } = votingData;
+    const { workflowStatus } = votingData;
     return (
         <>
             <Grid item xs={6}>

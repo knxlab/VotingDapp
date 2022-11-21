@@ -20,11 +20,8 @@ export default function useEthEventSubscriber({ contract, eventNames, account }:
     }
 
     useEffect(() => {
+
         setEvents({});
-    }, [account])
-
-    useEffect(() => {
-
         const eventEmitters: Array<any> = [];
         eventNames.forEach((eventName) => {
             eventEmitters.push(contract.events[eventName]({ fromBlock: 0 }));

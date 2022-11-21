@@ -2,7 +2,8 @@ import { AppBar as MaterialAppBar, Chip, Toolbar, Typography } from '@mui/materi
 import React from 'react';
 import useCurrentAccount from '../../hooks/useCurrentAccount';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
-import DarkModeSwitch from '../../components/AppBar/DarkModeSwitch';
+import DarkModeSwitch from './DarkModeSwitch';
+import styles from './styles.module.css';
 
 function AccountChip({ address }: { address: string }) {
 
@@ -20,29 +21,31 @@ function AccountChip({ address }: { address: string }) {
 export default function AppBar({ children }: { children?: React.ReactNode }) {
     const account = useCurrentAccount();
     return (
-        <MaterialAppBar position="absolute">
+        <MaterialAppBar position="absolute" sx={{ width: "100%" }}>
             <Toolbar
                 sx={{
-                    pr: '24px', // keep right padding when drawer closed
+                    // pr: '24px', // keep right padding when drawer closed
                 }}
             >
 
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            >
-              Voting session
-            </Typography>
+                <Typography
+                    component="h1"
+                    variant="h6"
+                    color="inherit"
+                    noWrap
 
-            {children}
+                >
+                Voting session
+                </Typography>
 
-            <div>
-                <DarkModeSwitch />
-                <AccountChip address={account} />
-            </div>
+                <div className={styles.containerCenter}>
+                    {children}
+                </div>
+
+                <div>
+                    <DarkModeSwitch />
+                    <AccountChip address={account} />
+                </div>
 
 
             </Toolbar>

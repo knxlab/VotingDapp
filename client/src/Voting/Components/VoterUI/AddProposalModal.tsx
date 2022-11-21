@@ -7,6 +7,7 @@ import styles from './AddProposalModal.module.css';
 import useCurrentAccount from '../../../hooks/useCurrentAccount';
 import { useVotingContext } from '../../VotingContext';
 import { useSnackbar } from 'notistack';
+import extractError from '../../../helpers/contractErrors';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -44,7 +45,11 @@ export default function AddProposalModal({
             setLoading(false);
             enqueueSnackbar("Proposal added !", { variant: "success" });
             handleClose();
-        } catch (e) {
+        } catch (e: any) {
+            const contractError = extractError(e);
+            if (contractError) {
+                alert(contractError.message);
+            }
             setLoading(false);
         }
     }

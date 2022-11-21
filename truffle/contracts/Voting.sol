@@ -8,6 +8,7 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 contract Voting is Ownable {
 
     uint public winningProposalID;
+    string public description;
 
     struct Voter {
         bool isRegistered;
@@ -47,6 +48,10 @@ contract Voting is Ownable {
     }
 
     // on peut faire un modifier pour les états
+
+    function setDescription(string calldata _description) external onlyOwner {
+        description = _description;
+    }
 
     // ::::::::::::: GETTERS ::::::::::::: //
 

@@ -38,7 +38,8 @@ function EthProvider({ children }) {
     const tryInit = async () => {
       try {
         const artifacts = {
-          Voting: require("../../contracts/Voting.json")
+          Voting: require("../../contracts/Voting.json"),
+          VotingFactory: require("../../contracts/VotingFactory.json"),
         };
         init(artifacts);
       } catch (err) {
