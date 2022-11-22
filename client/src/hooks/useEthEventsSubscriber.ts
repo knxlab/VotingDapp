@@ -20,7 +20,7 @@ export default function useEthEventSubscriber({ contract, eventNames, account }:
     }
 
     useEffect(() => {
-
+        console.log("ADD EVENTS?");
         setEvents({});
         const eventEmitters: Array<any> = [];
         eventNames.forEach((eventName) => {
@@ -32,6 +32,7 @@ export default function useEthEventSubscriber({ contract, eventNames, account }:
         })
 
         return () => {
+            console.log("REmove events?");
             eventEmitters.forEach((eventEmitter) => {
                 eventEmitter.off('data', onEvent);
             })

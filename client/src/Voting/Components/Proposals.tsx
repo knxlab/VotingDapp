@@ -37,6 +37,7 @@ export default function ProposalTable({
             return;
         }
 
+        console.log("votingData.proposalIds", votingData.proposalIds);
         return await Promise.all(votingData.proposalIds.map(async proposalId => {
             const proposal = await votingContract.methods.getOneProposal(proposalId).call({ from: account });
             return {
