@@ -16,7 +16,7 @@ import { DarkModeContext } from './DarkModeContext';
 type COLORMODE_TYPE = 'light' | 'dark';
 
 function AppRoot() {
-  const [mode, setMode] = React.useState<COLORMODE_TYPE>(window.localStorage.getItem('colorMode') as COLORMODE_TYPE || "light");
+  const [mode, setMode] = React.useState<COLORMODE_TYPE>(window.localStorage.getItem('colorMode') as COLORMODE_TYPE || "dark");
   const colorMode = React.useMemo(
     () => ({
       toggle: () => {

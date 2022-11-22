@@ -48,9 +48,13 @@ function EthProvider({ children, autoInit = false }) {
       }
     };
 
-    if (autoInit) {
-      tryInit();
-    }
+    (async () => {
+      const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
+      const accounts = await web3.eth.getAccounts();
+      if (autoInit || accounts.length > 0) {
+        tryInit();
+      }
+    })()
   }, [init, autoInit]);
 
   useEffect(() => {
