@@ -46,18 +46,21 @@ export default function useVotingData({ votingContract }: any): VOTINGDATA {
     const [votingData, setVotingData] = useState<STATE>(defaultVotingData);
     const account = useCurrentAccount();
 
-    const onEvent = (eventName: 'VoterRegistered' | 'Voted' | 'ProposalRegistered') => (event: any) => {
+    const onEvent = useCallback((event: any, eventName: string) => {
+        if (['VoterRegistered', 'Voted', 'ProposalRegistered'].indexOf(eventName) === -1) {
+            return;
+        }
         setVotingData((votingData) => ({
             ...votingData,
             events: {
                 ...votingData.events,
                 [eventName]: [
-                    ...votingData.events[eventName],
+                    ...(votingData.events as any)[eventName],
                     event
                 ]
             }
         }))
-    }
+    }, []);
 
     const refreshData = useCallback(async () => {
 
@@ -108,9 +111,9 @@ export default function useVotingData({ votingContract }: any): VOTINGDATA {
     }, [refreshData]);
 
     // Events
-    useEvent({ onEvent: onEvent('VoterRegistered'), contract: votingContract, eventName: 'VoterRegistered', account });
-    useEvent({ onEvent: onEvent('Voted'), contract: votingContract, eventName: 'Voted', account });
-    useEvent({ onEvent: onEvent('ProposalRegistered'), contract: votingContract, eventName: 'ProposalRegistered', account });
+    useEvent({ onEvent, contract: votingContract, eventName: 'VoterRegistered', account });
+    useEvent({ onEvent, contract: votingContract, eventName: 'Voted', account });
+    useEvent({ onEvent, contract: votingContract, eventName: 'ProposalRegistered', account });
 
     const addLocalVoter = useCallback((voterAddress: string) => {
         setLocalVoters(voters => ([...voters, voterAddress]))

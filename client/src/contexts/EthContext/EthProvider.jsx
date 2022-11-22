@@ -17,7 +17,6 @@ function EthProvider({ children, autoInit = false }) {
         const accounts = await web3.eth.requestAccounts();
         const networkID = await web3.eth.net.getId();
         const contracts = {};
-        console.log("accounts", accounts, artifacts);
         Object.keys(artifacts).forEach(artifactName => {
           const artifact = artifacts[artifactName];
           const { abi } = artifact;
@@ -41,7 +40,6 @@ function EthProvider({ children, autoInit = false }) {
   useEffect(() => {
     const tryInit = async () => {
       try {
-        console.log("CALL FIRST INIT");
         init(INIT_ARTIFACTS);
       } catch (err) {
         console.error(err);
@@ -61,7 +59,6 @@ function EthProvider({ children, autoInit = false }) {
     if (!state.ready) { // Do not listen to event if account not connected !
       return;
     }
-    console.log("Start listening to events");
     const handleChainChanged = () => {
       init(INIT_ARTIFACTS);
     };
