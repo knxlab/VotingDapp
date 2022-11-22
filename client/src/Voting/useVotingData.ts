@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useCurrentAccount from "../hooks/useCurrentAccount";
-import useEthEventSubscriber from "../hooks/useEthEventsSubscriber";
+import useEvent from "../hooks/useEthEventsSubscriber";
 import arrayUniq from 'lodash.uniq';
 
 type STATE = {
@@ -9,12 +9,15 @@ type STATE = {
     description: string;
     winningProposalID: number;
     workflowStatus: number;
+
+    events: {
+        VoterRegistered: Array<any>;
+        Voted: Array<any>;
+        ProposalRegistered: Array<any>;
+    }
 }
 
-const eventNames = ['VoterRegistered', 'ProposalRegistered', 'Voted'];
-
 export type VOTINGDATA = STATE & {
-    loading: boolean;
     isOwner: boolean;
     voters: Array<string>;
     votes: Array<string>;
@@ -29,29 +32,59 @@ const defaultVotingData: STATE = {
     ready: false,
     winningProposalID: 0,
     description: "",
-    workflowStatus: -1
+    workflowStatus: -1,
+    events: {
+        Voted: [],
+        VoterRegistered: [],
+        ProposalRegistered: []
+    }
 }
 
 export default function useVotingData({ votingContract }: any): VOTINGDATA {
 
     const [localVoters, setLocalVoters] = useState<Array<string>>([]);
-    const [loading, setLoading] = useState<boolean>(false);
     const [votingData, setVotingData] = useState<STATE>(defaultVotingData);
     const account = useCurrentAccount();
-    const events = useEthEventSubscriber({ contract: votingContract, eventNames, account});
 
-    const refreshData = async () => {
+    const onEvent = (eventName: 'VoterRegistered' | 'Voted' | 'ProposalRegistered') => (event: any) => {
+        setVotingData((votingData) => ({
+            ...votingData,
+            events: {
+                ...votingData.events,
+                [eventName]: [
+                    ...votingData.events[eventName],
+                    event
+                ]
+            }
+        }))
+    }
+
+    const refreshData = useCallback(async () => {
 
         if (!votingContract || !account) {
             return;
         }
 
-        setLoading(true);
+        const [
+            owner, workflowStatus, winningProposalID, description,
+            VoterRegistered,
+            Voted,
+            ProposalRegistered
+        ] = await Promise.all([
+            votingContract.methods.owner().call(),
+            votingContract.methods.workflowStatus().call().then((workflowStatus: string) => parseInt(workflowStatus, 10)),
+            votingContract.methods.winningProposalID().call().then((winningProposalID: string) => parseInt(winningProposalID, 10)),
+            votingContract.methods.description().call(),
+            votingContract.getPastEvents('VoterRegistered', { fromBlock: 0, toBlock: 'latest' }),
+            votingContract.getPastEvents('Voted', { fromBlock: 0, toBlock: 'latest' }),
+            votingContract.getPastEvents('ProposalRegistered', { fromBlock: 0, toBlock: 'latest' })
+        ]);
 
-        const owner = await votingContract.methods.owner().call();
-        const workflowStatus: number = parseInt(await votingContract.methods.workflowStatus().call(), 10);
-        const winningProposalID: number = parseInt(await votingContract.methods.winningProposalID().call(), 10);
-        const description: string = await votingContract.methods.description().call();
+        const events = {
+            VoterRegistered,
+            Voted,
+            ProposalRegistered
+        }
 
         setVotingData(votingData => ({
             ...votingData,
@@ -59,34 +92,41 @@ export default function useVotingData({ votingContract }: any): VOTINGDATA {
             description,
             owner,
             workflowStatus,
+            events,
             ready: true
         }));
-        setLoading(false);
-    }
+
+    }, [votingContract, account]);
 
     useEffect(() => {
-        console.log("REFRESH DATA ??");
         setVotingData(defaultVotingData);
         setLocalVoters([]);
+    }, [votingContract]);
+
+    useEffect(() => {
         refreshData();
-    // eslint-disable-next-line
-    }, [votingContract, account]);
+    }, [refreshData]);
+
+    // Events
+    useEvent({ onEvent: onEvent('VoterRegistered'), contract: votingContract, eventName: 'VoterRegistered', account });
+    useEvent({ onEvent: onEvent('Voted'), contract: votingContract, eventName: 'Voted', account });
+    useEvent({ onEvent: onEvent('ProposalRegistered'), contract: votingContract, eventName: 'ProposalRegistered', account });
+
+    const addLocalVoter = useCallback((voterAddress: string) => {
+        setLocalVoters(voters => ([...voters, voterAddress]))
+    }, [])
 
     return {
         ...votingData,
         isOwner: (account || "").toLowerCase() === (votingData?.owner || "").toLowerCase(),
-        loading,
         voters: arrayUniq([
-            ...(events['VoterRegistered'] || []).map(returnValues => returnValues.voterAddress as string),
+            ...(votingData?.events.VoterRegistered || []).map(({ returnValues }: any) => returnValues.voterAddress as string),
             ...localVoters
         ]),
-        votes: (events['Voted'] || []).map(returnValues => returnValues.voter as string),
-        proposalIds: (events['ProposalRegistered'] || []).map(returnValues => parseInt(returnValues.proposalId, 10) as number),
-
+        votes: (votingData?.events.Voted || []).map(({ returnValues }: any) => returnValues.voter as string),
+        proposalIds: (votingData?.events.ProposalRegistered || []).map(({ returnValues }: any) => parseInt(returnValues.proposalId, 10) as number),
 
         refresh: refreshData,
-        addLocalVoter: (voterAddress) => {
-            setLocalVoters(voters => ([...voters, voterAddress]))
-        },
+        addLocalVoter
     };
 }

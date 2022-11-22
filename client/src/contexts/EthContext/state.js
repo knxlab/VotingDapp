@@ -4,6 +4,7 @@ const actions = {
 
 const initialState = {
   loading: true,
+  ready: false,
   web3: null,
   accounts: null,
   networkID: null,

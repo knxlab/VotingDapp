@@ -25,21 +25,22 @@ export function VotingWithAddress({ votingSessionAdress }: { votingSessionAdress
 
     useEffect(() => {
         if (web3) {
-            console.log("SET CONTRACT AGAIN ?");
             setContract(new web3.eth.Contract(VotingArtifact.abi, votingSessionAdress));
         }
     }, [votingSessionAdress, web3]);
 
     if (!contract) {
-        return <div>loading...</div>
+        return <div></div>
     }
 
     return (
-        <Voting key={votingSessionAdress} votingSession={{
-            description: "",
-            contract,
-            contractAdress: votingSessionAdress
-        }} />
+        <Voting
+            votingSession={{
+                description: "",
+                contract,
+                contractAdress: votingSessionAdress
+            }}
+        />
     );
 }
 
@@ -52,7 +53,7 @@ export default function Voting({ votingSession }: { votingSession: VotingSession
     const {voter: currentUserVoter, isVoter, refetch: refetchVoter} = useVoter({ address: account, votingContract });
 
     if (!ready) {
-        return <div>Loadding...</div>
+        return <div></div>
     }
 
     return (

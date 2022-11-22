@@ -1,43 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export type EVENT_TYPE = {
     [key: string]: Array<any>
 }
 
-export default function useEthEventSubscriber({ contract, eventNames, account }: { contract: any; eventNames: Array<string>; account: string;}) {
-    const [events, setEvents] = useState<EVENT_TYPE>({});
-
-    const onEvent = (event: any) => {
-        setEvents(events => {
-            return {
-                ...events,
-                [event.event]: [
-                    ...(events[event.event] || []),
-                    event.returnValues
-                ]
-            }
-        })
-    }
-
-    useEffect(() => {
-        console.log("ADD EVENTS?");
-        setEvents({});
-        const eventEmitters: Array<any> = [];
-        eventNames.forEach((eventName) => {
-            eventEmitters.push(contract.events[eventName]({ fromBlock: 0 }));
-        })
-
-        eventEmitters.forEach((eventEmitter) => {
-            eventEmitter.on('data', onEvent);
-        })
-
+export default function useEvent({ onEvent, contract, eventName, account }: { onEvent: (event: any) => any, contract: any; eventName: string; account: string;}) {
+    return useEffect(() => {
+        const eventEmitter = contract.events[eventName]({ fromBlock: 'earliest' });
+        eventEmitter.on('data', onEvent);
         return () => {
-            console.log("REmove events?");
-            eventEmitters.forEach((eventEmitter) => {
-                eventEmitter.off('data', onEvent);
-            })
+            eventEmitter.off('data', onEvent);
         }
-    }, [contract, eventNames, account]);
-
-    return events;
+    }, [onEvent, contract, eventName, account]);
 }

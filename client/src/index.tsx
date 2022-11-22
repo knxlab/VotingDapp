@@ -9,7 +9,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import App from './App';
+import { AppLoadEth } from './App';
 import { CssBaseline } from '@mui/material';
 import { DarkModeContext } from './DarkModeContext';
 
@@ -44,7 +44,7 @@ function AppRoot() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <SnackbarProvider maxSnack={3}>
-          <App />
+          <AppLoadEth />
         </SnackbarProvider>
       </ThemeProvider>
     </DarkModeContext.Provider>
@@ -53,7 +53,7 @@ function AppRoot() {
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
-    <EthProvider>
+    <EthProvider autoInit={false}>
       <AppRoot />
     </EthProvider>
 );

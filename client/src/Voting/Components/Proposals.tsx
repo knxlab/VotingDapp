@@ -1,5 +1,5 @@
 import { Button, Grid, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import extractError from '../../helpers/contractErrors';
 import useCurrentAccount from '../../hooks/useCurrentAccount';
 import { VOTER } from '../../hooks/useVoter';
@@ -24,7 +24,7 @@ export default function ProposalTable({
     const [proposals, setProposals] = useState<Array<{proposalId: number; proposalDesc: string; voteCount: number}>>([]);
     const isVoter = votingData.voters.indexOf(account) !== -1;
 
-    const fetchProposals = async () => {
+    const fetchProposals = useCallback(async () => {
         setIsLoading(true);
 
         if (!isVoter) {
@@ -37,9 +37,9 @@ export default function ProposalTable({
             return;
         }
 
-        console.log("votingData.proposalIds", votingData.proposalIds);
         return await Promise.all(votingData.proposalIds.map(async proposalId => {
             const proposal = await votingContract.methods.getOneProposal(proposalId).call({ from: account });
+
             return {
                 proposalId,
                 proposalDesc: proposal.description,
@@ -49,7 +49,7 @@ export default function ProposalTable({
             setProposals(proposals);
             setIsLoading(false);
         })
-    }
+    }, [isVoter, account, votingData, votingContract]);
 
     const voteForProposal = async (proposalId: number) => {
         setIsVotingForProposalId(proposalId);
@@ -69,8 +69,7 @@ export default function ProposalTable({
 
     useEffect(() => {
         fetchProposals()
-    // eslint-disable-next-line
-    }, [isVoter, votingData.proposalIds]);
+    }, [fetchProposals]);
 
     const canVote = () => {
         return isVoter && !currentUserVoter.hasVoted && votingData.workflowStatus === WorkflowStatus.VotingSessionStarted;

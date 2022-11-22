@@ -1,4 +1,4 @@
-import { Alert, Box, CircularProgress } from "@mui/material";
+import { Alert, Box, Button, CircularProgress } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 import { useEth } from "./contexts/EthContext";
@@ -12,7 +12,30 @@ import VotingArtifact from './contracts/Voting.json';
 import AppBar from "./components/AppBar";
 import CreateVotingSessionButton from "./components/CreateVotingSession/ButtonCreate";
 import Web3 from "web3";
+import MetaMaskLoginBtn from "./components/MetaMaskLoginBtn";
+import { FullWithHeightFlex } from "./Layout/FullWidthHeightFlex";
+import Title from "./Layout/Title";
 
+
+export function AppLoadEth() {
+  const { state: { ready, loading, accounts }} = useEth();
+
+  if (!ready) {
+    return (
+      <FullWithHeightFlex>
+        <Title>Welcome to DecentraVote</Title>
+        <MetaMaskLoginBtn />
+      </FullWithHeightFlex>
+    );
+  }
+
+  if (loading || !accounts || !accounts[0]) {
+    return <div>loading...</div>
+  }
+  return (
+    <App />
+  )
+}
 
 function App() {
 
@@ -85,7 +108,7 @@ function App() {
               onVotingSessionCreated={fetchVotingSessions}
             />
           )}
-          {votingSessionAdress !== ""  && <VotingWithAddress votingSessionAdress={votingSessionAdress} />}
+          {votingSessionAdress !== ""  && <VotingWithAddress key={votingSessionAdress} votingSessionAdress={votingSessionAdress} />}
           {votingSessionAdress === "" && (
             <div className="placeholderContainer">
               <AppBar />
