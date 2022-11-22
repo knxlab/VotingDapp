@@ -53,7 +53,7 @@ function App() {
     return <div className="appinfo-container"><CircularProgress /></div>
   }
 
-  if (!contracts.VotingFactory || !contracts.Voting) {
+  if (!contracts.VotingFactory) {
     return (
       <div className="appinfo-container">
         <Alert severity="error">Contracts are not available</Alert>

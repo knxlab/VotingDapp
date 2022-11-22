@@ -12,13 +12,13 @@ function EthProvider({ children }) {
         const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
         const accounts = await web3.eth.requestAccounts();
         const networkID = await web3.eth.net.getId();
-
         const contracts = {};
         Object.keys(artifacts).forEach(artifactName => {
           const artifact = artifacts[artifactName];
           const { abi } = artifact;
           let address, contract;
           try {
+            console.log(artifact.networks[networkID].address);
             address = artifact.networks[networkID].address;
             contract = new web3.eth.Contract(abi, address);
           } catch (err) {
@@ -38,7 +38,6 @@ function EthProvider({ children }) {
     const tryInit = async () => {
       try {
         const artifacts = {
-          Voting: require("../../contracts/Voting.json"),
           VotingFactory: require("../../contracts/VotingFactory.json"),
         };
         init(artifacts);
