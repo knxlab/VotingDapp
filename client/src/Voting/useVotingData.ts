@@ -127,7 +127,9 @@ export default function useVotingData({ votingContract }: any): VOTINGDATA {
             ...localVoters
         ]),
         votes: (votingData?.events.Voted || []).map(({ returnValues }: any) => returnValues.voter as string),
-        proposalIds: (votingData?.events.ProposalRegistered || []).map(({ returnValues }: any) => parseInt(returnValues.proposalId, 10) as number),
+        proposalIds: arrayUniq(
+            (votingData?.events.ProposalRegistered || []).map(({ returnValues }: any) => parseInt(returnValues.proposalId, 10) as number)
+        ),
 
         refresh: refreshData,
         addLocalVoter
