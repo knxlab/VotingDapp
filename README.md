@@ -1,6 +1,11 @@
 # Voting DApp
 
-## Link
+This project has 2 branches :
+
+- main => dev / edit / whatever
+- goerli => This branch contains the contract + valid adress on the goerli test-net, you can just do yarn start and test the projet there.
+
+## Demo Links
 
 Linked to local ganache => [https://voting-dapp-david-quenet.vercel.app/](https://voting-dapp-david-quenet.vercel.app/)
 
