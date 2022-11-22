@@ -1,4 +1,4 @@
-import { Alert, Box, Button, CircularProgress } from "@mui/material";
+import { Alert, Box, CircularProgress } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 import { useEth } from "./contexts/EthContext";
