@@ -1,7 +1,11 @@
 # Voting DApp
 
 ## Link
-[https://voting-dapp-david-quenet.vercel.app/](https://voting-dapp-david-quenet.vercel.app/)
+
+Linked to local ganache => [https://voting-dapp-david-quenet.vercel.app/](https://voting-dapp-david-quenet.vercel.app/)
+
+Linked to Goerli TestNet => [https://voting-dapp-nuo7ih24q-knxlab.vercel.app/](https://voting-dapp-nuo7ih24q-knxlab.vercel.app/)
+
 ## Demo video
 [https://youtu.be/57DFA0ukBxE](https://youtu.be/57DFA0ukBxE)
 
