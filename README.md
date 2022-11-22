@@ -1,35 +1,40 @@
-# React Truffle Box
+# Voting DApp
 
-This box comes with everything you need to start using Truffle to write, compile, test, and deploy smart contracts, and interact with them from a React app.
+## Link
+[https://voting-dapp-david-quenet.vercel.app/](https://voting-dapp-david-quenet.vercel.app/)
+## Demo video
+[https://youtu.be/57DFA0ukBxE](https://youtu.be/57DFA0ukBxE)
+
 
 ## Installation
 
-First ensure you are in an empty directory.
-
-Run the `unbox` command using 1 of 2 ways.
+Install dependencies
 
 ```sh
 # Install Truffle globally and run `truffle unbox`
-$ npm install -g truffle
-$ truffle unbox react
+$ cd client
+$ yarn install
+$ cd ../truffle
+$ yarn install
 ```
 
+Deploy contract on ganache or goerli (You must add a .env with infura keys)
+
 ```sh
-# Alternatively, run `truffle unbox` via npx
-$ npx truffle unbox react
+# cd truffle
+$ yarn migrate-dev
+$ yarn migrate-goerli
 ```
 
 Start the react dev server.
 
 ```sh
 $ cd client
-$ npm start
-  Starting the development server...
+$ yarn start
 ```
 
-From there, follow the instructions on the hosted React app. It will walk you through using Truffle and Ganache to deploy the `SimpleStorage` contract, making calls to it, and sending transactions to change the contract's state.
 
-## FAQ
+## Truffle box FAQ
 
 - __How do I use this with Ganache (or any other network)?__
 
